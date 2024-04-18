@@ -47,8 +47,9 @@ $dash
 # $dash
 Write-Host "Device: ${OS}, WIN - ${OS_VERS}"
 # Identify which Drive is being primarily used on the system.
-Write-Host "Current Drive(s) on ${OS}:"
-Get-WmiObject -Class win32_logicaldisk | Format-Table DeviceId, MediaType, @{n="Size in GB";e={[math]::Round($_.Size/1GB,2)}},@{n="FreeSpace";e={[math]::Round($_.FreeSpace/1GB,2)}}
+Write-Host "Current Drive(s):"
+# Get-WmiObject -Class win32_logicaldisk | Format-Table DeviceId, MediaType, @{n="Size in GB";e={[math]::Round($_.Size/1GB,2)}},@{n="FreeSpace";e={[math]::Round($_.FreeSpace/1GB,2)}}
+Get-WmiObject -Class Win32_LogicalDisk | Select-Object -Property DeviceID, VolumeName, @{Label='FreeSpace (Gb)'; expression={($_.FreeSpace/1GB).ToString('F2')}}, @{Label='Total (Gb)'; expression={($_.Size/1GB).ToString('F2')}}
 # $drive
 # Get-PSDrive
 # Write-Host "Volume size of Drive(s) on ${OS}:"
@@ -64,3 +65,9 @@ Get-WmiObject -Class win32_logicaldisk | Format-Table DeviceId, MediaType, @{n="
 # 
 # Output .txt file containing all processes running on Windows.
 Get-Process | Format-Table -View StartTime | Out-File -FilePath .\Process.txt
+
+# Network Utilities
+# Retrieve current MAC address of Host, and identify MAC first three bytes to identify which brand or model it is.
+Write-Host "1. Fingerprint"
+Write-Host "2. View Wi-Fi Network Profile(s)"
+Write-Host "3. "
